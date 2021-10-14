@@ -38,7 +38,6 @@ immaculate: clean
 	rm -fr *~
 
 data:
-	rm -rf data
 	git clone --depth 1 https://github.com/freeuni-paradigms/02-six-degrees-data.git
 	mv 02-six-degrees-data/data .
 	rm -rf 02-six-degrees-data
