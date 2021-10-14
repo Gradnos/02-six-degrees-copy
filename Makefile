@@ -18,9 +18,9 @@ MAINAPP_SRCS = $(MAINAPP_CLASS) six-degrees.cc
 MAINAPP_OBJS = $(MAINAPP_SRCS:.cc=.o)
 MAINAPP = six-degrees
 
-EXECUTABLES = $(IMDBTEST) $(MAINAPP) 
+EXECUTABLES = $(IMDBTEST) $(MAINAPP)
 
-default : $(EXECUTABLES)
+default : data $(EXECUTABLES)
 
 $(IMDBTEST) : $(IMDBTEST_OBJS)
 	$(CXX) -o $(IMDBTEST) $(IMDBTEST_OBJS) $(LDFLAGS)
@@ -31,8 +31,14 @@ $(IMDBTEST)-pure : $(IMDBTEST_OBJS)
 $(MAINAPP) : $(MAINAPP_OBJS)
 	$(CXX) -o $(MAINAPP) $(MAINAPP_OBJS) $(LDFLAGS)
 
-clean : 
+clean :
 	/bin/rm -f *.o a.out $(IMDBTEST) $(IMDBTEST).purify $(MAINAPP) $(MAINAPP).purify core Makefile.dependencies
 
 immaculate: clean
 	rm -fr *~
+
+data:
+	rm -rf data
+	git clone --depth 1 https://github.com/freeuni-paradigms/02-six-degrees-data.git
+	mv 02-six-degrees-data/data .
+	rm -rf 02-six-degrees-data
