@@ -89,7 +89,17 @@ class imdb {
   const void *actorFile;
   const void *movieFile;
   
-  // everything below here is complicated and needn't be touched.
+  string getActorNameById(int id) const;
+  int getActorIdByName(string name) const;
+  char* getActorPointerById(int id) const;
+  string getActorNameByOffset(int offset) const;
+
+
+  film getFilmById(int id) const;
+  int getFilmIdByFilm(film f) const;
+  char* getFilmPointerById(int id) const;
+  film getFilmByOffset(int offset) const;
+    // everything below here is complicated and needn't be touched.
   // you're free to investigate, but you're on your own.
   struct fileInfo {
     int fd;

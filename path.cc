@@ -12,6 +12,16 @@ using namespace std;
  * another.
  */
 
+void path::print(){
+  string currActor = startPlayer;
+  for(connection c : links){
+    cout << currActor << " was in \""<< c.movie.title << "\" (" << c.movie.year << ") with " << c.player<<".\n";
+    currActor = c.player;
+  }
+
+
+}
+
 path::path(const string& player) : startPlayer(player) {} 
 // ommission of links from init list calls the default constructor
 

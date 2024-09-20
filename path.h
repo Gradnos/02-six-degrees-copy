@@ -38,6 +38,8 @@ class path {
   
  public:
 
+  void print();
+
   /**
    * Constructor: path
    * -----------------

@@ -52,17 +52,30 @@ static string promptForActor(const string& prompt, const imdb& db)
  * @return 0 if the program ends normally, and undefined otherwise.
  */
 
+void coutPath(path p){
+  p.reverse();
+  while(p.getLength() != 0){
+    cout << p.getLastPlayer() << " ";
+    p.undoConnection();
+  }
+
+}
+
+
+
 int main(int argc, const char *argv[])
 {
-  cout<<"yes";
   imdb db(determinePathToData(argv[1])); // inlined in imdb-utils.h
   if (!db.good()) {
     cout << "Failed to properly initialize the imdb database." << endl;
     cout << "Please check to make sure the source files exist and that you have permission to read them." << endl;
     return 1;
   }
-  
+
+
+
   while (true) {
+    bool ans = false;
     string source = promptForActor("Actor or actress", db);
     if (source == "") break;
     string target = promptForActor("Another actor or actress", db);
@@ -71,7 +84,41 @@ int main(int argc, const char *argv[])
       cout << "Good one.  This is only interesting if you specify two different people." << endl;
     } else {
       // replace the following line by a call to your generateShortestPath routine... 
-      cout << endl << "No path between those two people could be found." << endl << endl;
+      list<path> paths;
+      set<string> prevActors;
+      set<film> prevFilms;
+
+      path p(source);
+      paths.push_back(p);
+      while(true){
+        if(paths.empty()) break;
+        path currP = paths.front();
+        paths.pop_front();
+        if(currP.getLength() > 5) break;
+        vector<film> movies;
+        db.getCredits(currP.getLastPlayer(),movies);
+        for(film f : movies){
+          if(prevFilms.find(f) != prevFilms.end()) continue; //skip if movie is visited
+          prevFilms.insert(f);
+          vector<string> players;
+          db.getCast(f,players);
+          for(string player : players){
+            if(prevActors.find(player) != prevActors.end()) continue; // skip if actor is visited
+            path newP = currP;
+            newP.addConnection(f,player);
+            if(player == target){
+              newP.print();
+              ans = true;
+              break;
+            }
+            paths.push_back(newP);
+          }
+          if(ans) break;
+        }
+        if(ans) break;
+
+      }
+      if(!ans) cout << "No path between those two people could be found." << endl;
     }
   }
   
